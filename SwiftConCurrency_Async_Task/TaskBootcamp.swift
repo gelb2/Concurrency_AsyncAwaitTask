@@ -70,10 +70,23 @@ struct TaskBootcamp: View {
 //            }
             
             //구동되는 스레드가 같더라도 프라이오리티에 따라 끝나는 시간은 다를 수 있다
+            /*
+            //high와 userIniated는 TaskPriority.rawValue가 25로 같다
+            Task(priority: .high) {
+                //yield는 현재 태스크를 suspend하고 다음 태스크가 실행될 것을 허락하는 메소드
             
-            //TaskPriority.rawValue가 9
-            Task(priority: .background) {
-                print("background : \(Thread.current) : \(Task.currentPriority)")
+                await Task.yield()
+                print("high : \(Thread.current) : \(Task.currentPriority)")
+            }
+            
+            //high와 userIniated는 TaskPriority.rawValue가 25로 같다
+            Task(priority: .userInitiated) {
+                print("userInitiated : \(Thread.current) : \(Task.currentPriority)")
+            }
+            
+            //TaskPriority.rawValue가 21
+            Task(priority: .medium) {
+                print("medium : \(Thread.current) : \(Task.currentPriority)")
             }
             
             //low와 utility는 TaskPriority.rawValue가 17로 같다
@@ -86,19 +99,20 @@ struct TaskBootcamp: View {
                 print("utility : \(Thread.current) : \(Task.currentPriority)")
             }
             
-            //TaskPriority.rawValue가 21
-            Task(priority: .medium) {
-                print("medium : \(Thread.current) : \(Task.currentPriority)")
+            //TaskPriority.rawValue가 9
+            Task(priority: .background) {
+                
+                print("background : \(Thread.current) : \(Task.currentPriority)")
             }
+            */
             
-            //high와 userIniated는 TaskPriority.rawValue가 25로 같다
-            Task(priority: .high) {
-                print("high : \(Thread.current) : \(Task.currentPriority)")
-            }
-            
-            //high와 userIniated는 TaskPriority.rawValue가 25로 같다
-            Task(priority: .userInitiated) {
-                print("userInitiated : \(Thread.current) : \(Task.currentPriority)")
+            Task(priority: .low) {
+                print("low : \(Thread.current) : \(Task.currentPriority)")
+                //차일드태스크는 패런츠태스크의 프라이오리티를 따라간다
+                //
+                Task {
+                    print("low : \(Thread.current) : \(Task.currentPriority)")
+                }
             }
         }
     }
