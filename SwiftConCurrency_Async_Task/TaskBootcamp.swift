@@ -51,6 +51,7 @@ struct TaskBootcampHomeView: View {
 struct TaskBootcamp: View {
     
     @StateObject private var viewModel = TaskBootcampViewModel()
+    @State private var fetchImageTask: Task<(), Never>? = nil
     
     var body: some View {
         VStack(spacing: 40) {
@@ -68,8 +69,11 @@ struct TaskBootcamp: View {
                     .frame(width: 200, height: 200)
             }
         }
+        .onDisappear {
+            fetchImageTask?.cancel()
+        }
         .onAppear {
-            Task {
+            fetchImageTask = Task {
                 await viewModel.fetchImage()
             }
             
