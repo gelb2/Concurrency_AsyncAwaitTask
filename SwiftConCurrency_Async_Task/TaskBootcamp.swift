@@ -12,10 +12,14 @@ class TaskBootcampViewModel: ObservableObject {
     @Published var image2: UIImage? = nil
     
     func fetchImage() async {
+        try? await Task.sleep(nanoseconds: 5_000_000_000)
         do {
             guard let url = URL(string: "https://picsum.photos/200") else { return }
             let (data, _) = try await URLSession.shared.data(from: url, delegate: nil)
-            self.image = UIImage(data: data)
+            
+            await MainActor.run(body: {
+                self.image = UIImage(data: data)
+            })
         } catch {
             print(error.localizedDescription)
         }
@@ -28,6 +32,18 @@ class TaskBootcampViewModel: ObservableObject {
             self.image2 = UIImage(data: data)
         } catch {
             print(error.localizedDescription)
+        }
+    }
+}
+
+struct TaskBootcampHomeView: View {
+    var body: some View {
+        NavigationView {
+            ZStack {
+                NavigationLink("click me ") {
+                    TaskBootcamp()
+                }
+            }
         }
     }
 }
@@ -53,6 +69,9 @@ struct TaskBootcamp: View {
             }
         }
         .onAppear {
+            Task {
+                await viewModel.fetchImage()
+            }
             
 //            Task {
 //
