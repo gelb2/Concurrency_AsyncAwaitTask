@@ -37,7 +37,13 @@ struct AsyncLetBootcamp: View {
                         
                         let image2 = try await fetchImage()
                         self.images.append(image2)
+                    } catch {
                         
+                    }
+                }
+                
+                Task {
+                    do {
                         let image3 = try await fetchImage()
                         self.images.append(image3)
                         
