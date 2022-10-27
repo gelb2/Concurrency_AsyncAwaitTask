@@ -29,10 +29,10 @@ class CheckedContinuationBootcampNetworkManager {
         return try await withCheckedThrowingContinuation { continuation in
             URLSession.shared.dataTask(with: url) { data, response, error in
                 if let data = data {
-                    //꼭 한번은 contuniton.resume이 호출되어야 한다. 가이드에 그렇게 나와있다
+                    //꼭 한번은 contuniton.resume이 호출되어야 한다. 가이드에 그렇게 나와있다. 안 부르는 것도 안되고 2번 이상 부르는 것도 안된다
                     continuation.resume(returning: data)
                 } else if let error = error {
-                    //꼭 한번은 contuniton.resume이 호출되어야 한다. 가이드에 그렇게 나와있다
+                    //꼭 한번은 contuniton.resume이 호출되어야 한다. 가이드에 그렇게 나와있다. 안 부르는 것도 안되고 2번 이상 부르는 것도 안된다
                     //if let data = data가 안된다면, 즉 data가 없다면 반드시 에러를 던져야 한다.
                     //그렇지 않으면 Task가 계속 suspended 상태로 되고, 결국 버그, 앱이 죽거나 할 것이다
                     continuation.resume(throwing: error)
@@ -41,6 +41,20 @@ class CheckedContinuationBootcampNetworkManager {
                 }
             }
             .resume()
+        }
+    }
+    
+    func getHeartImageFromDatabase(completionHandler: @escaping (_ image: UIImage) -> ()) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            completionHandler(UIImage(systemName: "heart.fill")!)
+        }
+    }
+    
+    func getHeartImageFromDatabase() async -> UIImage {
+        return await withCheckedContinuation { continuation in
+            getHeartImageFromDatabase { image in
+                continuation.resume(returning: image)
+            }
         }
     }
 }
@@ -64,6 +78,11 @@ class CheckedContinuationBootcampViewModel: ObservableObject {
             print(error)
         }
     }
+    
+    func getHeartImage() async {
+        let image = await networkManager.getHeartImageFromDatabase()
+        self.image = image
+    }
 }
 
 struct CheckedContinuationBootcamp: View {
@@ -80,7 +99,8 @@ struct CheckedContinuationBootcamp: View {
             }
         }
         .task {
-            await viewModel.getImage()
+//            await viewModel.getImage()
+            await viewModel.getHeartImage()
         }
     }
 }
