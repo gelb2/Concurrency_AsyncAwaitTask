@@ -35,6 +35,11 @@ struct AsyncLetBootcamp: View {
                         
                         //일단 async let 으로 선언해서 메소드의 리턴값을 하나하나 await 할 필요가 없어짐
                         async let fetchImage1 = fetchImage()
+                        async let fetchTitle1 = fetchTitle()
+                        
+                        //이미지, 스트링 처럼 서로 다른 타입을 리턴하는 async 메소드여도 한번에 await 를 걸 수 있다
+//                        let (image, title) = await (try fetchImage1, fetchTitle1)
+                        
                         async let fetchImage2 = fetchImage()
                         async let fetchImage3 = fetchImage()
                         async let fetchImage4 = fetchImage()
@@ -60,6 +65,10 @@ struct AsyncLetBootcamp: View {
                 }
             }
         }
+    }
+    
+    func fetchTitle() async -> String {
+        return "new title"
     }
     
     func fetchImage() async throws -> UIImage {
