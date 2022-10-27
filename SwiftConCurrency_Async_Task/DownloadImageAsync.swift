@@ -40,16 +40,15 @@ class DownloadImageAsyncImageLoader {
             .eraseToAnyPublisher()
     }
     
-    func downloadWithAsync() async {
+    func downloadWithAsync() async throws -> UIImage? {
         
         do {
             //await: wait unitl async function get response
             let (data, response) = try await URLSession.shared.data(from: url, delegate: nil)
+            return handleResponse(data: data, response: response)
         } catch {
-            
+            throw error
         }
-        
-        
     }
 }
 
@@ -58,21 +57,31 @@ class DownloadImageAsyncViewModel: ObservableObject {
     let loader = DownloadImageAsyncImageLoader()
     var cancellables = Set<AnyCancellable>()
     
-    func fetchImage() {
+    func fetchImage() async {
 //        loader.downloadWithEscaping { [weak self] image, error in
 //            DispatchQueue.main.async {
 //                self?.image = image
 //            }
 //        }
         
-        loader.downloadWithCombine()
-            .receive(on: DispatchQueue.main)
-            .sink { _ in
-                
-            } receiveValue: { [weak self] image in
-                self?.image = image
-            }
-            .store(in: &cancellables)
+//        loader.downloadWithCombine()
+//            .receive(on: DispatchQueue.main)
+//            .sink { _ in
+//
+//            } receiveValue: { [weak self] image in
+//                self?.image = image
+//            }
+//            .store(in: &cancellables)
+        
+        //await: wait unitl async function get response
+        let image = try? await loader.downloadWithAsync()
+        
+        //try to avoid Mix Using GCD with async await task
+        //recomment to use new one. like a mainActor
+        
+        await MainActor.run {
+            self.image = image
+        }
     }
     
 }
@@ -91,7 +100,11 @@ struct DownloadImageAsync: View {
             }
         }
         .onAppear {
-            viewModel.fetchImage()
+            //how to handle async function in the function or declation that has no async keyword
+            //answer: get async response with Task {}
+            Task {
+                await viewModel.fetchImage()
+            }
         }
     }
 }
