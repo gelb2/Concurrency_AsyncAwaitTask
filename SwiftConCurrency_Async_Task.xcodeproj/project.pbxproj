@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3675F0B4290B3D68003F8864 /* CheckedContinuationBootcamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3675F0B3290B3D68003F8864 /* CheckedContinuationBootcamp.swift */; };
 		36D986A5290B001E005BD1AC /* SwiftConCurrency_Async_TaskApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D986A4290B001E005BD1AC /* SwiftConCurrency_Async_TaskApp.swift */; };
 		36D986A7290B001E005BD1AC /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D986A6290B001E005BD1AC /* ContentView.swift */; };
 		36D986A9290B0020005BD1AC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 36D986A8290B0020005BD1AC /* Assets.xcassets */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3675F0B3290B3D68003F8864 /* CheckedContinuationBootcamp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckedContinuationBootcamp.swift; sourceTree = "<group>"; };
 		36D986A1290B001E005BD1AC /* SwiftConCurrency_Async_Task.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftConCurrency_Async_Task.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		36D986A4290B001E005BD1AC /* SwiftConCurrency_Async_TaskApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftConCurrency_Async_TaskApp.swift; sourceTree = "<group>"; };
 		36D986A6290B001E005BD1AC /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -71,6 +73,7 @@
 				36D986B8290B2093005BD1AC /* TaskBootcamp.swift */,
 				36D986BA290B2C14005BD1AC /* AsyncLetBootcamp.swift */,
 				36D986BC290B3368005BD1AC /* TaskGroupBootcamp.swift */,
+				3675F0B3290B3D68003F8864 /* CheckedContinuationBootcamp.swift */,
 				36D986A8290B0020005BD1AC /* Assets.xcassets */,
 				36D986AA290B0020005BD1AC /* Preview Content */,
 			);
@@ -158,6 +161,7 @@
 				36D986B5290B0C7D005BD1AC /* DownloadImageAsync.swift in Sources */,
 				36D986B3290B015C005BD1AC /* DoCatchTryThrowsBootcamp.swift in Sources */,
 				36D986A7290B001E005BD1AC /* ContentView.swift in Sources */,
+				3675F0B4290B3D68003F8864 /* CheckedContinuationBootcamp.swift in Sources */,
 				36D986B9290B2093005BD1AC /* TaskBootcamp.swift in Sources */,
 				36D986B7290B1806005BD1AC /* AsyncAwaitBootcamp.swift in Sources */,
 				36D986A5290B001E005BD1AC /* SwiftConCurrency_Async_TaskApp.swift in Sources */,
