@@ -53,15 +53,52 @@ struct TaskBootcamp: View {
             }
         }
         .onAppear {
-            Task {
-                
-                //이 둘을 동시에 호출하려면 어떻게 해야 할까? Task를 2개 해도 되나...다른 방법도 있다
-                await viewModel.fetchImage()
+            
+//            Task {
+//
+//                //이 둘을 동시에 호출하려면 어떻게 해야 할까? Task를 2개 해도 되나...다른 방법도 있다
+//                print(Thread.current)
+//                print(Task.currentPriority)
+//                await viewModel.fetchImage()
+////                await viewModel.fetchImage2()
+//            }
+//
+//            Task {
+//                print(Thread.current)
+//                print(Task.currentPriority)
 //                await viewModel.fetchImage2()
+//            }
+            
+            //구동되는 스레드가 같더라도 프라이오리티에 따라 끝나는 시간은 다를 수 있다
+            
+            //TaskPriority.rawValue가 9
+            Task(priority: .background) {
+                print("background : \(Thread.current) : \(Task.currentPriority)")
             }
             
-            Task {
-                await viewModel.fetchImage2()
+            //low와 utility는 TaskPriority.rawValue가 17로 같다
+            Task(priority: .low) {
+                print("low : \(Thread.current) : \(Task.currentPriority)")
+            }
+            
+            //low와 utility는 TaskPriority.rawValue가 17로 같다
+            Task(priority: .utility) {
+                print("utility : \(Thread.current) : \(Task.currentPriority)")
+            }
+            
+            //TaskPriority.rawValue가 21
+            Task(priority: .medium) {
+                print("medium : \(Thread.current) : \(Task.currentPriority)")
+            }
+            
+            //high와 userIniated는 TaskPriority.rawValue가 25로 같다
+            Task(priority: .high) {
+                print("high : \(Thread.current) : \(Task.currentPriority)")
+            }
+            
+            //high와 userIniated는 TaskPriority.rawValue가 25로 같다
+            Task(priority: .userInitiated) {
+                print("userInitiated : \(Thread.current) : \(Task.currentPriority)")
             }
         }
     }
