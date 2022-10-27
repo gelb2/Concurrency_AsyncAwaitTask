@@ -106,14 +106,16 @@ struct TaskBootcamp: View {
             }
             */
             
-            Task(priority: .low) {
-                print("low : \(Thread.current) : \(Task.currentPriority)")
-                //차일드태스크는 패런츠태스크의 프라이오리티를 따라간다
-                //
-                Task {
-                    print("low : \(Thread.current) : \(Task.currentPriority)")
-                }
-            }
+//            Task(priority: .low) {
+//                print("low : \(Thread.current) : \(Task.currentPriority)")
+//                //차일드태스크는 패런츠태스크의 프라이오리티를 따라간다
+//                //차일드태스크를 detached로 패런츠태스크에서 때네면 프라이오리티가 달라진다
+//                //하지만 애플은 정말 필요한 경우가 아니라면, 가능하면 detached를 하지 말것을 권장한다.
+//                //그래서 태스크그룹을 고려해야 한다
+//                Task.detached {
+//                    print("low : \(Thread.current) : \(Task.currentPriority)")
+//                }
+//            }
         }
     }
 }
