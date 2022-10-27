@@ -19,6 +19,40 @@ class TaskGroupBootcampDataManager {
         return [image1, image2, image3, image4]
     }
     
+    func fetchIOmagesWithTaskGroup() async throws -> [UIImage] {
+        
+        //withThrowningTaskGroup과 withTaskGroup의 차이는 에러 던지기의 여부다
+        
+        //태스크그룹 안의 차일드태스크 타입을 정해준다. 이미지를 던지는 메소드를 넣을 예정이니 UIImage.self
+        return try await withThrowingTaskGroup(of: UIImage.self) { group in
+            var images: [UIImage] = []
+            
+            //차일드태스크를 만들어서 그룹에 추가한다
+            //차일드태스크는 패런츠태스크의 프라이오리티를 따라간다. 필요시에 프라이오리티를 수정하면 된다
+            group.addTask {
+                try await self.fetchImage(urlString: "https://picsum.photos/300")
+            }
+            
+            group.addTask {
+                try await self.fetchImage(urlString: "https://picsum.photos/300")
+            }
+            
+            group.addTask {
+                try await self.fetchImage(urlString: "https://picsum.photos/300")
+            }
+            
+            group.addTask {
+                try await self.fetchImage(urlString: "https://picsum.photos/300")
+            }
+            
+            for try await image in group {
+                images.append(image)
+            }
+            
+            return images
+        }
+    }
+    
     private func fetchImage(urlString: String) async throws -> UIImage {
         
         guard let url = URL(string: urlString) else {
@@ -43,7 +77,7 @@ class TaskGroupBootcampViewModel: ObservableObject {
     let manager = TaskGroupBootcampDataManager()
     
     func getImages() async {
-        if let images = try? await manager.fetchImagesWithAsyncLet() {
+        if let images = try? await manager.fetchIOmagesWithTaskGroup() {
             self.images.append(contentsOf: images)
         }
     }
