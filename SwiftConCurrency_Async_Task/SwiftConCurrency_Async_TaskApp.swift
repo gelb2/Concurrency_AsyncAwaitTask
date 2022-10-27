@@ -11,7 +11,7 @@ import SwiftUI
 struct SwiftConCurrency_Async_TaskApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            TaskBootcampHomeView()
         }
     }
 }
