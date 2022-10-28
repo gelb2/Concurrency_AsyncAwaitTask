@@ -28,13 +28,30 @@ struct MyStruct {
     var title: String
 }
 
+class MyClass {
+    var title: String
+    
+    init(title: String) {
+        self.title = title
+    }
+}
+
 extension StructClassActorBootcamp {
     private func runTest() {
         print("test start")
         structTest1()
+        printDivider()
+        classTest()
+    }
+    
+    private func printDivider() {
+        print("""
+        ---------------------------
+        """)
     }
     
     private func structTest1() {
+        print("structTest1")
         let objectA = MyStruct(title: "starting title")
         print("object a ", objectA.title)
         
@@ -48,6 +65,26 @@ extension StructClassActorBootcamp {
         objectB.title = "second title"
         print("object b title changed")
         
+        print("object a ", objectA.title)
+        print("object b ", objectB.title)
+    }
+    
+    private func classTest() {
+        print("classTest1")
+        let objectA = MyClass(title: "starting title")
+        print("object a ", objectA.title)
+        
+        
+        print("pass the reference of objecta  to objectb")
+        //클래스는 let으로 선언되어 있어도 let 인스턴스의 내부 변수를 변경할 수 있다
+        //objectB와 objectA는 같은 인스턴스를 가리키고 있다. 참조를 전달했으므로
+        let objectB = objectA
+        print("object b ", objectB.title)
+        
+        objectB.title = "second title"
+        print("object b title changed")
+        
+        //a와 b의 타이틀 모두 바뀐다.
         print("object a ", objectA.title)
         print("object b ", objectB.title)
     }
