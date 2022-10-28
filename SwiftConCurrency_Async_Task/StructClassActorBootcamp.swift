@@ -24,24 +24,13 @@ struct StructClassActorBootcamp_Previews: PreviewProvider {
     }
 }
 
-struct MyStruct {
-    var title: String
-}
-
-class MyClass {
-    var title: String
-    
-    init(title: String) {
-        self.title = title
-    }
-}
-
 extension StructClassActorBootcamp {
     private func runTest() {
         print("test start")
-        structTest1()
-        printDivider()
-        classTest()
+//        structTest1()
+//        printDivider()
+//        classTest()
+        structTest2()
     }
     
     private func printDivider() {
@@ -87,5 +76,64 @@ extension StructClassActorBootcamp {
         //a와 b의 타이틀 모두 바뀐다.
         print("object a ", objectA.title)
         print("object b ", objectB.title)
+    }
+}
+
+struct MyStruct {
+    var title: String
+}
+
+//immutable struct
+struct CustomStruct {
+    let title: String
+    
+    //struct 안의 변수를 바꾼다는 것은 struct 오브젝트 전체를 새로 만든 다는 것과 유사한 의미이다.
+    func updateTitle(newTitle: String) -> CustomStruct {
+        CustomStruct(title: newTitle)
+    }
+}
+
+//왜 이렇게 muatting func를 할까?
+//struct가 업데이트 되는 것을 제약하고 싶을 때가 있을 것이다. "변화를 꼭 주고 싶을때"는 꼭 mutating func를 호출해서 바꾸도록, private var인 변수를 바꾸고 싶을때 mutating func를 호출하도록 유도하는 것이라고 이해하면 된다
+struct MutatingStruct {
+    private (set) var title: String
+    
+    //struct 안의 변수를 바꾼다는 것은 struct 오브젝트 전체를 새로 만든 다는 것과 유사한 의미이다.
+    mutating func updateTitle(newTitle: String) {
+        title = newTitle
+    }
+}
+
+extension StructClassActorBootcamp {
+    
+    private func structTest2() {
+        var struct1 = MyStruct(title: "title1")
+        print("struct1 :\(struct1.title)")
+        struct1.title = "title2"
+        print("struct1 :\(struct1.title)")
+        
+        var struct2 = CustomStruct(title: "title2")
+        print("struct2 :\(struct2.title)")
+        struct2 = CustomStruct(title: "title2")
+        print("struct2 :\(struct2.title)")
+        
+        var struct3 = CustomStruct(title: "title1")
+        print("struct3 :\(struct3.title)")
+        struct3 = struct3.updateTitle(newTitle: "title2")
+        print("struct3 :\(struct3.title)")
+        
+        var struct4 = MutatingStruct(title: "title1")
+        print("struct4 :\(struct4.title)")
+        struct4.updateTitle(newTitle: "title2")
+        print("struct4 :\(struct4.title)")
+    }
+    
+}
+
+class MyClass {
+    var title: String
+    
+    init(title: String) {
+        self.title = title
     }
 }
