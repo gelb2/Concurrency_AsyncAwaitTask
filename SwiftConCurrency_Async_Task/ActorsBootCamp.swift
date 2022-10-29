@@ -40,9 +40,36 @@ class MyDataManager {
     }
 }
 
+//액터 도입을 통한 추가적인 혜택
+//GCD + Closure 체제에서는 클로저(completionHandler)가 MyDataManager를 쓰는 모든 전반적인 클래스에서 드러나고, 별도 기능추가, 클로저 추가 시 해당 부분을 고쳐야 하는 경우가 많아진다.
+//액터는 클로저 사용을 줄일 수 있으므로 이 부분에서 우위가 있다
+actor MyActorDataManager {
+    static let instance = MyActorDataManager()
+    
+    private init() { }
+    
+    var data: [String] = []
+    
+    nonisolated let myRandomText = "sdfsfsd"
+    
+    //경쟁상황 관련 문제, 스레드세이프 관련 문제를 막는 두번째 방법
+    func getRandomData() -> String? {
+        self.data.append(UUID().uuidString)
+        print(Thread.current)
+        return self.data.randomElement()
+    }
+    
+    //액터로 아이솔레이션, 즉 Task, await 를 이용한 제어가 필요없는 경우가 아주 조금 있는데 그런 경우가 있다면?
+    //다시말해 "얘는 때려죽여도 Thread Safe와 관련된 에러가 생기지 않을 것이다" 라는 경우라면? await를 걸 필요가 전혀 없다면?
+    //nonisolated 어트리뷰트로 "얘는 굳이 await 걸어서까지 받을 필요가 없다" 고 명시
+    nonisolated func getSavedData() -> String {
+        return "new data"
+    }
+}
+
 struct HomeView: View {
     
-    let manager = MyDataManager.instance
+    let manager = MyActorDataManager.instance
     @State private var text: String = ""
     let timer = Timer.publish(every: 0.01, on: .main, in: .common, options: nil).autoconnect()
     
@@ -53,23 +80,30 @@ struct HomeView: View {
             Text(text)
                 .font(.headline)
         }
+        .onAppear {
+            let newString = manager.getSavedData()
+        }
         .onReceive(timer) { _ in
-            DispatchQueue.global(qos: .background).async {
-                manager.getRandomData { title in
-                    if let data = title {
-                        //UI만 메인스레드에서 바꾸도록
-                        DispatchQueue.main.async {
-                            self.text = data
-                        }
-                    }
-                }
+            Task {
+                //액터는 근본적인 설계 자체가 ThreadSafe 하므로 await 키워드로 잘 제어하면 본 상황과 같이 onAppear, onReceive 처럼 한 클래스에 여러 스레드가 접근하는 위험한 상황에서도 쉽게 사용할 수 있다
+                await manager.getRandomData()
             }
+//            DispatchQueue.global(qos: .background).async {
+//                manager.getRandomData { title in
+//                    if let data = title {
+//                        //UI만 메인스레드에서 바꾸도록
+//                        DispatchQueue.main.async {
+//                            self.text = data
+//                        }
+//                    }
+//                }
+//            }
         }
     }
 }
 
 struct BrowseView: View {
-    let manager = MyDataManager.instance
+    let manager = MyActorDataManager.instance
     @State private var text: String = ""
     let timer = Timer.publish(every: 0.01, on: .main, in: .common, options: nil).autoconnect()
     
@@ -81,16 +115,24 @@ struct BrowseView: View {
                 .font(.headline)
         }
         .onReceive(timer) { _ in
-            DispatchQueue.global(qos: .default).async {
-                manager.getRandomData { title in
-                    if let data = title {
-                        //UI만 메인스레드에서 바꾸도록
-                        DispatchQueue.main.async {
-                            self.text = data
-                        }
-                    }
+            Task {
+                if let data = await manager.getRandomData() {
+                    await MainActor.run(body: {
+                        self.text = data
+                    })
                 }
             }
+            
+//            DispatchQueue.global(qos: .default).async {
+//                manager.getRandomData { title in
+//                    if let data = title {
+//                        //UI만 메인스레드에서 바꾸도록
+//                        DispatchQueue.main.async {
+//                            self.text = data
+//                        }
+//                    }
+//                }
+//            }
         }
     }
 }
